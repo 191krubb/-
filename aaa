@@ -1,5 +1,17 @@
 local UserInputService = game:GetService("UserInputService")
 
+-- ===============================
+-- Junk + RLO (สั้น)
+-- ===============================
+local _RLO = string.char(226, 128, 174)  -- ✅ ปลอดภัย
+local _JUNK_RAW = 
+local _JUNK_SUFFIX_RAW =
+local _JUNK_PREFIX = _JUNK_RAW:gsub("%(RLO%)", _RLO)
+local _JUNK_SUFFIX = _JUNK_SUFFIX_RAW:gsub("%(RLO%)", _RLO)
+
+-- ===============================
+-- GUI
+-- ===============================
 local gui = Instance.new("ScreenGui")
 gui.Name = "EncodeGUI"
 gui.ResetOnSpawn = false
@@ -75,20 +87,19 @@ local function encode(str)
     for i = 1, #str do
         encoded = encoded .. string.format("%%%02X", string.byte(str, i))
     end
-    local result = "1"
-        .. encoded
-        .. "9"
-    return result
+    return _JUNK_PREFIX .. encoded .. _JUNK_SUFFIX
 end
 
 btn.MouseButton1Click:Connect(function()
-    local encoded = encode(input.Text)
-    setclipboard(encoded)
+    setclipboard(encode(input.Text))
     btn.Text = "คัดลอกแล้ว!"
     wait(1.5)
     btn.Text = "คัดลอก"
 end)
 
+-- ===============================
+-- Drag
+-- ===============================
 local dragging, dragStart, startPos
 
 titlebar.InputBegan:Connect(function(inp)
